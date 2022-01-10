@@ -6,6 +6,10 @@ import net.hypixel.api.HypixelAPI;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import java.util.Scanner;
 import java.util.UUID;
@@ -26,16 +30,19 @@ public class stats {
             final String path = stats.class.getProtectionDomain().getCodeSource().getLocation().getPath().replaceFirst("/","");
             try{
                 File myObj = new File("apikey.txt");
-               if (!myObj.exists()) Runtime.getRuntime().exec("jar xf "+path+" apikey.txt");
+                //TODO:requires jdk
+               if (!myObj.exists()) {
+                   //System.out.println(stats.class.getResourceAsStream("/apikey.txt").toString());
+                   copy(stats.class.getResourceAsStream("/apikey.txt"),"apikey.txt");
+               }
                 while (true) {
                 if (myObj.exists()) {
+                    System.out.println("starting new window");
                     Runtime.getRuntime().exec("cmd /c start cmd.exe /c \"java -jar "+path+" -cmd\"");
                     break;
                 }else {
                     Thread.sleep(100);
                 }}
-
-                System.out.println("Successfully executed");
 
 
             }
@@ -68,7 +75,6 @@ public class stats {
 
             // Quit if the input is "Q" or "q"
             if (line.equalsIgnoreCase("Q")) {
-                System.out.println("Goodbye!");
                 System.exit(1);
             }
 
@@ -180,6 +186,21 @@ public class stats {
         }
         return returns;
     }
+    //TOdo: change file name to not be jar then api key
+    public static boolean copy(InputStream source , String destination) {
+        boolean succeess = true;
+
+        try {
+
+            Files.copy(source, Paths.get(destination));
+        } catch (IOException ex) {
+            succeess = false;
+        }
+
+        return succeess;
+
+    }
+
 }
 
 

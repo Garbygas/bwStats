@@ -30,10 +30,15 @@ public class stats {
             final String path = stats.class.getProtectionDomain().getCodeSource().getLocation().getPath().replaceFirst("/","");
             try{
                 File myObj = new File("apikey.txt");
-                //TODO:requires jdk
                if (!myObj.exists()) {
+                   try {
+                        InputStream source = stats.class.getResourceAsStream("/apikey.txt");
+                       Files.copy(source, Paths.get("apikey.txt"));
+                   } catch (IOException ex) {
+                       ex.printStackTrace();
+                       System.out.println("Error copying file:"+ex.getMessage());
+                   }
                    //System.out.println(stats.class.getResourceAsStream("/apikey.txt").toString());
-                   copy(stats.class.getResourceAsStream("/apikey.txt"),"apikey.txt");
                }
                 while (true) {
                 if (myObj.exists()) {
@@ -185,20 +190,6 @@ public class stats {
             if (i==fields.length-1) {returns = value.getAsString();}
         }
         return returns;
-    }
-    //TOdo: change file name to not be jar then api key
-    public static boolean copy(InputStream source , String destination) {
-        boolean succeess = true;
-
-        try {
-
-            Files.copy(source, Paths.get(destination));
-        } catch (IOException ex) {
-            succeess = false;
-        }
-
-        return succeess;
-
     }
 
 }

@@ -123,20 +123,20 @@ public class stats {
                     exists. If it doesn't, it returns "N/A" rather than throwing a
                     NullPointerException
                      */
-                    final double finalKills = Integer.parseInt(getFieldsOrNA(new String[]{"stats", "Bedwars", "final_kills_bedwars"}, player));
-                    final double finalDeaths = Integer.parseInt(getFieldsOrNA(new String[]{"stats", "Bedwars", "final_deaths_bedwars"}, player));
+                    final double finalKills = Integer.parseInt(getFields(new String[]{"stats", "Bedwars", "final_kills_bedwars"}, player));
+                    final double finalDeaths = Integer.parseInt(getFields(new String[]{"stats", "Bedwars", "final_deaths_bedwars"}, player));
                     final double fkdr = finalKills / finalDeaths;
-                    final double kills = Integer.parseInt(getFieldsOrNA(new String[]{"stats", "Bedwars", "kills_bedwars"}, player));
-                    final double deaths = Integer.parseInt(getFieldsOrNA(new String[]{"stats", "Bedwars", "deaths_bedwars"}, player));
+                    final double kills = Integer.parseInt(getFields(new String[]{"stats", "Bedwars", "kills_bedwars"}, player));
+                    final double deaths = Integer.parseInt(getFields(new String[]{"stats", "Bedwars", "deaths_bedwars"}, player));
                     final double kdr = kills / deaths;
-                    final double wins = Integer.parseInt(getFieldsOrNA(new String[]{"stats", "Bedwars", "wins_bedwars"}, player));
-                    final double losses = Integer.parseInt(getFieldsOrNA(new String[]{"stats", "Bedwars", "losses_bedwars"}, player));
+                    final double wins = Integer.parseInt(getFields(new String[]{"stats", "Bedwars", "wins_bedwars"}, player));
+                    final double losses = Integer.parseInt(getFields(new String[]{"stats", "Bedwars", "losses_bedwars"}, player));
                     final double wl = wins / losses;
-                    System.out.println("Username: " + getFieldOrNA("displayname", player)+"\n"+
+                    System.out.println("Username: " + getFields(new String[]{"displayname"}, player)+"\n"+
                                         "Bedwars Stats: \n"+
-                                        "Level: " + getFieldsOrNA(new String[]{"achievements", "bedwars_level"}, player)+"\n"+
+                                        "Level: " + getFields(new String[]{"achievements", "bedwars_level"}, player)+"\n"+
                                         "games played: "+fd(wins+losses,0)+"\n"+
-                                        "Beds Broken: " + fd(Integer.parseInt(getFieldsOrNA(new String[]{"stats", "Bedwars", "beds_broken_bedwars"}, player)),0)+"\n"+
+                                        "Beds Broken: " + fd(Integer.parseInt(getFields(new String[]{"stats", "Bedwars", "beds_broken_bedwars"}, player)),0)+"\n"+
                                         "Wins/loss: " + fd(wins,0) +"/"+fd(losses,0)+" or "+fd(wl,2)+"\n \n"+
                                         "Final Kills/deaths: " + fd(finalKills,0) +"/"+fd(finalDeaths,0)+" or "+fd(fkdr,2)+"\n \n"+
                                         "Kills/Deaths: "+fd(kills,0)+"/"+fd(deaths,0)+" or "+fd(kdr,2) +"\n"+
@@ -167,19 +167,8 @@ public class stats {
         if(i==2) return new DecimalFormat("#.##").format(d);
         else return new DecimalFormat("#").format(d);
     }
-    private static String getFieldOrNA(String field, JsonObject json) {
 
-        JsonElement value = json.get(field);
-        if (value != null) {
-            // If the field was found, return its value
-            return value.getAsString();
-        } else {
-            // Otherwise, return "N/A"
-            return "N/A";
-        }
-    }
-
-    private static String getFieldsOrNA(String[] fields, JsonObject json) {
+    private static String getFields(String[] fields, JsonObject json) {
         JsonElement value = json.get(fields[0]);
         String returns="Error";
         if (value==null) {return "N/A";}

@@ -28,7 +28,7 @@ public class stats {
                     stats.run(args[1]);
                 } else {
                     //TODO:just use a class lol
-                    final InputStream source = stats.class.getResourceAsStream("/api.json");
+                    final InputStream source = stats.class.getResourceAsStream("/private/api.json");
                     final Reader reader = new InputStreamReader(source);
                     final JsonObject jsonObject = JsonParser.parseReader(reader).getAsJsonObject();
                     stats.run(jsonObject.get("key").getAsString());

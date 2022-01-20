@@ -6,7 +6,7 @@
 
     <groupId>com.garby</groupId>
     <artifactId>bedwarsStats</artifactId>
-    <version>BETA-1.1.2</version>
+    <version>BETA-1.1.3</version>
     <packaging>jar</packaging>
     <repositories>
     <repository>

@@ -5,58 +5,41 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import net.hypixel.api.HypixelAPI;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import java.util.Scanner;
 import java.util.UUID;
 
 public class stats {
-    public static void main(String[] args) throws FileNotFoundException, InterruptedException {
-        String data;
-        if (args.length != 0) {
-            if (!args[0].equals("-debug")) {
-                File myObj = new File("apikey.txt");
+    public static void main(String[] args) {
+        try {
+            if (args.length == 0) {
+                final String path = stats.class.getProtectionDomain().getCodeSource().getLocation().getPath().replaceFirst("/", "");
+                Runtime.getRuntime().exec("cmd /c start cmd.exe /c \"java -jar " + path + " -w\"");
 
-                Scanner myReader = new Scanner(myObj);
-                data = myReader.nextLine().replaceAll("api key:", "").replaceAll(" ", "");
-                myReader.close();
-            } else data = args[1];
-            stats.run(data);
-            Thread.sleep(5000);
-        } else {
-            final String path = stats.class.getProtectionDomain().getCodeSource().getLocation().getPath().replaceFirst("/", "");
-            try {
-                File myObj = new File("apikey.txt");
-                if (!myObj.exists()) {
-                    try {
-                        InputStream source = stats.class.getResourceAsStream("/apikey.txt");
-                        Files.copy(source, Paths.get("apikey.txt"));
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
-                        System.out.println("Error copying file:" + ex.getMessage());
-                    }
-                    //System.out.println(stats.class.getResourceAsStream("/apikey.txt").toString());
+            } else {
+                if (args[0].equals("-debug")) {
+                    System.out.println("Debug mode enabled");
+                    stats.run(args[1]);
+                } else {
+                    //TODO:just use a class lol
+                    final InputStream source = stats.class.getResourceAsStream("/api.json");
+                    final Reader reader = new InputStreamReader(source);
+                    final JsonObject jsonObject = JsonParser.parseReader(reader).getAsJsonObject();
+                    stats.run(jsonObject.get("key").getAsString());
+
+
                 }
-                while (true) {
-                    if (myObj.exists()) {
-                        System.out.println("starting new window");
-                        Runtime.getRuntime().exec("cmd /c start cmd.exe /c \"java -jar " + path + " -cmd\"");
-                        break;
-                    } else {
-                        Thread.sleep(100);
-                    }
-                }
-
-
-            } catch (Exception e) {
-                System.err.println("Error: " + e.getMessage() + "\n");
-                e.printStackTrace();
             }
 
+        } catch (IOException e) {
+            System.out.println("Error: " + e.getMessage() + "\n");
+            e.printStackTrace();
         }
     }
 
@@ -103,7 +86,6 @@ public class stats {
                 Reader responseStreamScanner = new InputStreamReader(responseStream);
                 JsonObject jsonObject = JsonParser.parseReader(responseStreamScanner).getAsJsonObject();
                 String uuid = jsonObject.get("id").getAsString();
-
 
 
                 api.getPlayerByUuid(uuid).whenComplete((response, error) -> {

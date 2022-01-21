@@ -1,5 +1,0 @@
-api key:
-Welcome to Garby's hypixel stats program!
-to get started, log into the hypixel minecraft server and run the command /api new
-click on your newly generated api, then copy & paste it above.
-Save, close, and restart the jar file to start checking stats

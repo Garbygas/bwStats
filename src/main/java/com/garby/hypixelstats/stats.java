@@ -27,11 +27,16 @@ public class stats {
                     System.out.println("Debug mode enabled");
                     stats.run(args[1]);
                 } else {
-                    //TODO:just use a class lol
-                    final InputStream source = stats.class.getResourceAsStream("/private/api.json");
-                    final Reader reader = new InputStreamReader(source);
-                    final JsonObject jsonObject = JsonParser.parseReader(reader).getAsJsonObject();
-                    stats.run(jsonObject.get("key").getAsString());
+                    /* this fetches my api key from the file key.java
+                     it looks like this:
+
+                        package com.garby.hypixelstats;
+
+                            public class key {
+                                public static final String API_KEY = "<api key goes here>";
+                            }
+                     */
+                    stats.run(key.API_KEY);
 
 
                 }
@@ -49,7 +54,7 @@ public class stats {
 
         try { //check if the api key is valid, if not, use catch statement and print error
             HypixelAPI api = new HypixelAPI(UUID.fromString(key));
-
+            //asks the user for a username to get stats for
             System.out.println("Type a username to view their bedwars stats, or type \"q\" to quit!");
             Scanner sc = new Scanner(System.in);
             while (sc.hasNextLine()) {
@@ -76,6 +81,7 @@ public class stats {
                     System.err.println("Invalid username. Please try again!");
                     continue;
                 }
+                //use mojang to get the uuid of the username
                 URL url = new URL("https://api.mojang.com/users/profiles/minecraft/" + line);
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
@@ -83,11 +89,15 @@ public class stats {
                 connection.setRequestProperty("Content-Type", "application/json");
                 connection.setRequestProperty("Accept", "application/json");
                 InputStream responseStream = connection.getInputStream();
+                if (connection.getResponseCode() != 200) {
+                    System.err.println("Error. Please try again!");
+                    continue;
+                }
                 Reader responseStreamScanner = new InputStreamReader(responseStream);
                 JsonObject jsonObject = JsonParser.parseReader(responseStreamScanner).getAsJsonObject();
                 String uuid = jsonObject.get("id").getAsString();
 
-
+                //get the stats of the found uuid
                 api.getPlayerByUuid(uuid).whenComplete((response, error) -> {
 
                     // Check if there was an API error
@@ -137,11 +147,8 @@ public class stats {
                 });
             }
         } catch (Exception e) {
-            System.err.println("Double check your api key\n");
+            System.err.println("ERROR: " + e.getMessage() + "\n");
             e.printStackTrace();
-            System.out.println("\n check the newly created file apikey.txt" +
-                    "\n for instructions on how to get your api key\n" +
-                    "press enter to exit");
             Scanner sc = new Scanner(System.in);
             if (sc.hasNextLine()) {
                 System.exit(2);

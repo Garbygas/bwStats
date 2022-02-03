@@ -13,13 +13,13 @@ public class ui extends JPanel {
         //Creating the Frame
         JFrame frame = new JFrame("Hypixel Stats");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(700, 150);
+        frame.setSize(700, 500);
         frame.setResizable(false);
 
 
         //Creating the panel at bottom and adding components
         JPanel panel = new JPanel(); // the panel is not visible in output
-        JLabel label = new JLabel("Enter Text");
+        JLabel label = new JLabel("Enter Username:");
         JTextField tf = new JTextField(16); // accepts upto 16 characters
         JButton send = new JButton("Lookup");
         JButton reset = new JButton("Exit");
@@ -56,12 +56,13 @@ public class ui extends JPanel {
 
 
         // Append a row
-        table.setPreferredScrollableViewportSize(new Dimension(1000, 90));
+        table.setPreferredScrollableViewportSize(new Dimension(1000, 500));
         table.setFillsViewportHeight(true);
         table.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
         JScrollPane scrollPane = new JScrollPane(table);
+        scrollPane.setAutoscrolls(true);
 
-        scrollPane.setPreferredSize(new Dimension(1000, 90));
+        scrollPane.setPreferredSize(new Dimension(1000, 500));
 
 
         //Adding Components to the frame.

@@ -16,5 +16,5 @@
 package com.garby.hypixelstats;
 
 public class key {
-    public static final String API_KEY = "if you think you found somting, you'd be wrong. ha ha. otherwise put your api key here";
+    public static final String API_KEY = "if you think you found somting, you'd be wrong. thats in resources/secrets.txt ha ha. otherwise put your api key here";
 }

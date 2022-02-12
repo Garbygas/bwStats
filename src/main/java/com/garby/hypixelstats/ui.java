@@ -1,3 +1,19 @@
+/*
+ * Copyright 2022 Garbyexe
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.garby.hypixelstats;
 
 import javax.swing.*;
@@ -59,6 +75,7 @@ public class ui extends JPanel {
         table.setPreferredScrollableViewportSize(new Dimension(1000, 500));
         table.setFillsViewportHeight(true);
         table.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
+        table.setEnabled(false);
         JScrollPane scrollPane = new JScrollPane(table);
         scrollPane.setAutoscrolls(true);
 
@@ -73,8 +90,26 @@ public class ui extends JPanel {
 
         send.addActionListener(e -> {
 
+
             System.out.println("Button Clicked");
-            model.addRow(stats.main(tf.getText(), false));
+
+            if (tf.getText().isEmpty() || tf.getText().length() > 16 || tf.getText().length() < 2) {
+                JOptionPane.showMessageDialog(null, "Please enter a valid username");
+                tf.setText("");
+                return;
+            }
+
+            if (tf.getText().contains("$$")) {
+                frame.dispose();
+                egg.main(new String[]{tf.getText()});
+                return;
+            }
+
+
+            Object[] row = stats.main(tf.getText(), false);
+            if (row != null) {
+                model.addRow(row);
+            }
             tf.setText("");
 
 

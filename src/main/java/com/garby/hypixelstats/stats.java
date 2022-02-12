@@ -1,9 +1,24 @@
+/*
+ * Copyright 2022 Garbyexe
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.garby.hypixelstats;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import net.hypixel.api.HypixelAPI;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,7 +28,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.Scanner;
-import java.util.UUID;
 
 public class stats {
     public static Object[] main(String username, boolean debug) {
@@ -47,7 +61,6 @@ public class stats {
         //to debug this, use -debug api_key
 
 
-        HypixelAPI api = new HypixelAPI(UUID.fromString(key));
         // Make sure some text was typed
         if (line.length() == 0) {
             System.out.println("No username entered");
@@ -104,45 +117,42 @@ public class stats {
 
         // Get the player object from the response. This object stores any available information about a given player
 
-        if (player != null) {
+        /*
+        The player was found; print some basic info about them
+        Not every player has all of these fields (for example, staff members don't have
+        "mostRecentGameType"), so I added a handy little method to check if a field
+        exists. If it doesn't, it returns "N/A" rather than throwing a
+        NullPointerException
+         */
+        //^username ^level ^games played ^Wins ^Losses ^wlr ^fk ^fd ^fkdr ^k ^d  ^kdr
+        final double finalKills = Integer.parseInt(getFields(new String[]{"Bedwars", "final_kills_bedwars"}, stats));
+        final double finalDeaths = Integer.parseInt(getFields(new String[]{"Bedwars", "final_deaths_bedwars"}, stats));
+        final double fkdr = finalKills / finalDeaths;
+        final double kills = Integer.parseInt(getFields(new String[]{"Bedwars", "kills_bedwars"}, stats));
+        final double deaths = Integer.parseInt(getFields(new String[]{"Bedwars", "deaths_bedwars"}, stats));
+        final double kdr = kills / deaths;
+        final double wins = Integer.parseInt(getFields(new String[]{"Bedwars", "wins_bedwars"}, stats));
+        final double losses = Integer.parseInt(getFields(new String[]{"Bedwars", "losses_bedwars"}, stats));
+        final double wl = wins / losses;
 
-                    /*
-                    The player was found; print some basic info about them
-                    Not every player has all of these fields (for example, staff members don't have
-                    "mostRecentGameType"), so I added a handy little method to check if a field
-                    exists. If it doesn't, it returns "N/A" rather than throwing a
-                    NullPointerException
-                     */
-            //^username ^level ^games played ^Wins ^Losses ^wlr ^fk ^fd ^fkdr ^k ^d  ^kdr
-            final double finalKills = Integer.parseInt(getFields(new String[]{"Bedwars", "final_kills_bedwars"}, stats));
-            final double finalDeaths = Integer.parseInt(getFields(new String[]{"Bedwars", "final_deaths_bedwars"}, stats));
-            final double fkdr = finalKills / finalDeaths;
-            final double kills = Integer.parseInt(getFields(new String[]{"Bedwars", "kills_bedwars"}, stats));
-            final double deaths = Integer.parseInt(getFields(new String[]{"Bedwars", "deaths_bedwars"}, stats));
-            final double kdr = kills / deaths;
-            final double wins = Integer.parseInt(getFields(new String[]{"Bedwars", "wins_bedwars"}, stats));
-            final double losses = Integer.parseInt(getFields(new String[]{"Bedwars", "losses_bedwars"}, stats));
-            final double wl = wins / losses;
+        System.out.println(
+                "\nUsername: " + getFields(new String[]{"displayname"}, player) + "\n" +
+                        "Bedwars Stats: \n" +
+                        "Level: " + getFields(new String[]{"achievements", "bedwars_level"}, player) + "\n" +
+                        "games played: " + fd(wins + losses, 0) + "\n" +
+                        "Beds Broken: " + fd(Integer.parseInt(getFields(new String[]{"Bedwars", "beds_broken_bedwars"}, stats)), 0) + "\n" +
+                        "Wins/loss: " + fd(wins, 0) + "/" + fd(losses, 0) + " or " + fd(wl, 2) + "\n \n" +
+                        "Final Kills/deaths: " + fd(finalKills, 0) + "/" + fd(finalDeaths, 0) + " or " + fd(fkdr, 2) + "\n \n" +
+                        "Kills/Deaths: " + fd(kills, 0) + "/" + fd(deaths, 0) + " or " + fd(kdr, 2) + "\n" +
+                        "-----------------------------------------------------"
+        );
 
-            System.out.println(
-                    "\nUsername: " + getFields(new String[]{"displayname"}, player) + "\n" +
-                            "Bedwars Stats: \n" +
-                            "Level: " + getFields(new String[]{"achievements", "bedwars_level"}, player) + "\n" +
-                            "games played: " + fd(wins + losses, 0) + "\n" +
-                            "Beds Broken: " + fd(Integer.parseInt(getFields(new String[]{"Bedwars", "beds_broken_bedwars"}, stats)), 0) + "\n" +
-                            "Wins/loss: " + fd(wins, 0) + "/" + fd(losses, 0) + " or " + fd(wl, 2) + "\n \n" +
-                            "Final Kills/deaths: " + fd(finalKills, 0) + "/" + fd(finalDeaths, 0) + " or " + fd(fkdr, 2) + "\n \n" +
-                            "Kills/Deaths: " + fd(kills, 0) + "/" + fd(deaths, 0) + " or " + fd(kdr, 2) + "\n" +
-                            "-----------------------------------------------------"
-            );
-            return new Object[]{getFields(new String[]{"displayname"}, player),
-                    getFields(new String[]{"achievements", "bedwars_level"}, player),
-                    fd(wins + losses, 0),
-                    fd(Integer.parseInt(getFields(new String[]{"Bedwars", "beds_broken_bedwars"}, stats)), 0),
-                    fd(wins, 0), fd(losses, 0), fd(wl, 2), fd(finalKills, 0), fd(finalDeaths, 0),
-                    fd(fkdr, 2), fd(kills, 0), fd(deaths, 0), fd(kdr, 2)};
-        }
-        return new Object[]{"E", "R", "R", "O", "R"};
+        return new Object[]{getFields(new String[]{"displayname"}, player),
+                getFields(new String[]{"achievements", "bedwars_level"}, player),
+                fd(Integer.parseInt(getFields(new String[]{"Bedwars", "beds_broken_bedwars"}, stats)), 0),
+                fd(wins + losses, 0),
+                fd(wins, 0), fd(losses, 0), fd(wl, 2), fd(finalKills, 0), fd(finalDeaths, 0),
+                fd(fkdr, 2), fd(kills, 0), fd(deaths, 0), fd(kdr, 2)};
     }
 
     private static String fd(double d, int i) {

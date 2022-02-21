@@ -35,10 +35,12 @@ public class ui extends JPanel {
 
         //Creating the panel at bottom and adding components
         JPanel panel = new JPanel(); // the panel is not visible in output
+        JButton ingame = new JButton("Start In-Game");
         JLabel label = new JLabel("Enter Username:");
         JTextField tf = new JTextField(16); // accepts upto 16 characters
         JButton send = new JButton("Lookup");
         JButton reset = new JButton("Exit");
+        panel.add(ingame);
         panel.add(label); // Components Added using Flow Layout
         panel.add(tf);
         panel.add(send);
@@ -119,12 +121,15 @@ public class ui extends JPanel {
             System.out.println("Exit Clicked");
             System.exit(0);
         });
+
         tf.registerKeyboardAction(e -> {
             System.out.println("Button Clicked");
             send.doClick();
             tf.setText("");
         }, KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+
     }
+
 
     public static void setJTableColumnsWidth(JTable table, int tablePreferredWidth,
                                              double... percentages) {

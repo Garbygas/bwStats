@@ -1,3 +1,4 @@
 # Project exclude paths
 /target/
 key.java
+/src/main/java/com/garby/hypixelstats/ignore/

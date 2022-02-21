@@ -57,7 +57,7 @@ public class stats {
 
 
     public static Object[] lookup(String line, boolean debug) throws IOException {
-        String key = com.garby.hypixelstats.key.API_KEY;
+        String key = com.garby.hypixelstats.ignore.key.API_KEY;
         //to debug this, use -debug api_key
 
 

@@ -16,6 +16,8 @@
 
 package com.garby.hypixelstats;
 
+import com.garby.hypixelstats.ingameio.start;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
@@ -127,9 +129,8 @@ public class ui extends JPanel {
             send.doClick();
             tf.setText("");
         }, KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
-        ingame.addActionListener(e -> {
 
-        });
+        ingame.addActionListener(e -> start.main(new String[]{""}));
 
     }
 

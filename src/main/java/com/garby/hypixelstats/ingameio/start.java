@@ -16,5 +16,47 @@
 
 package com.garby.hypixelstats.ingameio;
 
+import com.garby.hypixelstats.stats;
+
+import java.io.File;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Arrays;
+
 public class start {
+    public static void main(String[] args) {
+
+        if (!System.getProperty("os.name").contains("Windows")) {
+
+            System.out.println("This program is currently only compatible with Windows.");
+            System.exit(0);
+        }
+        final String fileName = "bedwarsStats.exe";
+
+
+        final String jarPath = stats.class.getProtectionDomain().getCodeSource().getLocation().getPath().replaceFirst("/", "");
+        final String path = jarPath.substring(0, jarPath.lastIndexOf("/") + 1);
+
+        System.out.println(path);
+        System.out.println(jarPath);
+        try {
+            File hotkey = new File(fileName);
+            if (!hotkey.exists()) {
+                InputStream source = stats.class.getResourceAsStream("/" + fileName);
+                assert source != null;
+                Files.copy(source, Paths.get(fileName));
+            }
+            Runtime.getRuntime().exec(path + fileName + " " + jarPath);
+            System.out.println("Successfully started!");
+
+
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage() + "\n" + Arrays.toString(e.getStackTrace()));
+        }
+    }
+
+    public static void end() {
+        System.out.println("Hello World!");
+    }
 }

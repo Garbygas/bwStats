@@ -27,9 +27,6 @@ public class main {
             case "-ui": {
                 ui.main(new String[]{"null"});
                 break;}
-            case "-discord": {
-                discord.main(new String[]{"null"});
-            }
             case "egg": {
                 egg.main(new String[]{"null"});
             }
